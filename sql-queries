@@ -1,0 +1,220 @@
+-- 1. 
+-- Sessions Table
+CREATE TABLE Sessions (
+    SessionID INT PRIMARY KEY,
+    SessionDay VARCHAR(50),
+    StartTime TIME,
+    SessionType VARCHAR(50)
+);
+
+-- Staff Table
+CREATE TABLE Staff (
+    StaffID INT PRIMARY KEY,
+    StaffName VARCHAR(100),
+    Position VARCHAR(50),
+    SessionID INT,
+    FOREIGN KEY (SessionID) REFERENCES Sessions(SessionID)
+);
+
+-- Customers Table
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY,
+    CustomerName VARCHAR(100),
+    Email VARCHAR(100),
+    SessionID INT,
+    FOREIGN KEY (SessionID) REFERENCES Sessions(SessionID)
+);
+
+-- Machines Table
+CREATE TABLE Machines (
+    MachineID INT PRIMARY KEY,
+    MachineName VARCHAR(100),
+    Year INT,
+    Floor INT
+);
+
+-- Consoles Table
+CREATE TABLE Consoles (
+    ConsoleID INT PRIMARY KEY,
+    ConsoleName VARCHAR(100),
+    Manufacturer VARCHAR(100),
+    Year INT
+);
+
+-- Games Table
+CREATE TABLE Games (
+    GameID INT PRIMARY KEY,
+    GameName VARCHAR(100),
+    ConsoleID INT,
+    FOREIGN KEY (ConsoleID) REFERENCES Consoles(ConsoleID)
+);
+
+-- Session Consoles Table
+CREATE TABLE SessionConsoles (
+    SessionID INT,
+    ConsoleID INT,
+    PRIMARY KEY (SessionID, ConsoleID),
+    FOREIGN KEY (SessionID) REFERENCES Sessions(SessionID),
+    FOREIGN KEY (ConsoleID) REFERENCES Consoles(ConsoleID)
+);
+
+-- Member Types Table
+CREATE TABLE MemberTypes (
+    MemberTypeID INT PRIMARY KEY,
+    MemberTypeName VARCHAR(100),
+    MembershipFee DECIMAL(10, 2)
+);
+
+-- Booking List Table
+CREATE TABLE BookingList (
+    BookingID INT PRIMARY KEY,
+    CustomerID INT,
+    SessionID INT,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
+    FOREIGN KEY (SessionID) REFERENCES Sessions(SessionID)
+);
+
+-- Arcade Machine Information Table
+CREATE TABLE ArcadeMachineInfo (
+    MachineID INT PRIMARY KEY,
+    MachineName VARCHAR(100),
+    Floor INT,
+    FOREIGN KEY (MachineID) REFERENCES Machines(MachineID)
+);
+
+-- Floor Information Table
+CREATE TABLE FloorInfo (
+    FloorID INT PRIMARY KEY,
+    FloorNumber INT,
+    Description VARCHAR(255)
+);
+
+-- Console Inventory Table
+CREATE TABLE ConsoleInventory (
+    InventoryID INT PRIMARY KEY,
+    ConsoleID INT,
+    Quantity INT,
+    FOREIGN KEY (ConsoleID) REFERENCES Consoles(ConsoleID)
+);
+
+-- Membership Fee Details Table
+CREATE TABLE MembershipFeeDetails (
+    FeeID INT PRIMARY KEY,
+    MemberTypeID INT,
+    FeeAmount DECIMAL(10, 2),
+    FOREIGN KEY (MemberTypeID) REFERENCES MemberTypes(MemberTypeID)
+);
+
+-- Session Staff Duty Table
+CREATE TABLE SessionStaffDuty (
+    DutyID INT PRIMARY KEY,
+    StaffID INT,
+    SessionID INT,
+    FOREIGN KEY (StaffID) REFERENCES Staff(StaffID),
+    FOREIGN KEY (SessionID) REFERENCES Sessions(SessionID)
+);
+
+-- 2. 
+-- Customers Table
+INSERT INTO Customers (CustomerID, CustomerName, Email, SessionID) VALUES
+(1, 'John Doe', 'john@example.com', 1),
+(2, 'Jane Doe', 'jane@example.com', 2),
+(3, 'Alice Smith', 'alice@example.com', 3);
+
+-- Member Types Table
+INSERT INTO MemberTypes (MemberTypeID, MemberTypeName, MembershipFee) VALUES
+(1, 'Standard', 50.00),
+(2, 'Premium', 100.00),
+(3, 'VIP', 150.00);
+
+-- Machines Table
+INSERT INTO Machines (MachineID, MachineName, Year, Floor) VALUES
+(1, 'Pac-Man', 1980, 1),
+(2, 'Street Fighter', 1992, 2),
+(3, 'Mortal Kombat', 1995, 3);
+
+-- Floors Table
+INSERT INTO FloorInfo (FloorID, FloorNumber, Description) VALUES
+(1, 1, 'Arcade Floor'),
+(2, 2, 'Console Gaming Floor'),
+(3, 3, 'PC Gaming Floor');
+
+-- Staff Table
+INSERT INTO Staff (StaffID, StaffName, Position, SessionID) VALUES
+(1, 'John Doe', 'Manager', 1),
+(2, 'Jane Doe', 'Technician', 2),
+(3, 'Bob Brown', 'Assistant', 3);
+
+-- Games Table
+INSERT INTO Games (GameID, GameName, ConsoleID) VALUES
+(1, 'Super Mario', 1),
+(2, 'Halo', 2),
+(3, 'The Legend of Zelda', 3);
+
+-- Consoles Table
+INSERT INTO Consoles (ConsoleID, ConsoleName, Manufacturer, Year) VALUES
+(1, 'PS2', 'Sony', 2000),
+(2, 'Xbox 360', 'Microsoft', 2005),
+(3, 'Nintendo Switch', 'Nintendo', 2017);
+
+-- Sessions Table
+INSERT INTO Sessions (SessionID, SessionDay, StartTime, SessionType) VALUES
+(1, 'Monday', '10:00', 'Arcade'),
+(2, 'Tuesday', '14:00', 'Console'),
+(3, 'Wednesday', '18:00', 'PC');
+
+-- Booking List Table
+INSERT INTO BookingList (BookingID, CustomerID, SessionID) VALUES
+(1, 1, 1),
+(2, 2, 2),
+(3, 3, 3);
+
+-- Arcade Machine Information Table
+INSERT INTO ArcadeMachineInfo (MachineID, MachineName, Floor) VALUES
+(1, 'Pac-Man', 1),
+(2, 'Street Fighter', 2),
+(3, 'Mortal Kombat', 3);
+
+-- Floor Information Table
+INSERT INTO FloorInfo (FloorID, FloorNumber, Description) VALUES
+(1, 1, 'First Floor Arcade'),
+(2, 2, 'Second Floor Console'),
+(3, 3, 'Third Floor PC');
+
+-- Console Inventory Table
+INSERT INTO ConsoleInventory (InventoryID, ConsoleID, Quantity) VALUES
+(1, 1, 10),
+(2, 2, 5),
+(3, 3, 15);
+
+-- Membership Fee Details Table
+INSERT INTO MembershipFeeDetails (FeeID, MemberTypeID, FeeAmount) VALUES
+(1, 1, 50.00),
+(2, 2, 100.00),
+(3, 3, 150.00);
+
+-- Session Staff Duty Table
+INSERT INTO SessionStaffDuty (DutyID, StaffID, SessionID) VALUES
+(1, 1, 1),
+(2, 2, 2),
+(3, 3, 3);
+
+-- 3. 
+SELECT * FROM Customers WHERE SessionID = 1 AND PaymentStatus = 'Not Paid';
+
+
+-- 4. 
+SELECT * FROM Machines WHERE Floor = 2 ORDER BY Year DESC;
+
+-- 5.
+SELECT COUNT(*) FROM Games WHERE ConsoleID = (SELECT ConsoleID FROM Consoles WHERE ConsoleName = 'PS2');
+
+-- 6.
+SELECT * FROM Staff WHERE SessionID = 1 AND Position = 'Counter';
+
+-- 7.
+UPDATE Machines SET Floor = 2 WHERE MachineName = 'Grand Theft Auto' AND Floor = 1;
+
+-- 8. 
+DELETE FROM Machines WHERE MachineName = 'Mario';
+
